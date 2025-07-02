@@ -1,1 +1,36 @@
+name: Auto Build Dux_OS
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git \
+            live-build \
+            debootstrap \
+            squashfs-tools \
+            xorriso \
+            grub-pc-bin \
+            grub-efi-amd64-bin
+
+      - name: Clone and build Dux_OS
+        run: |
+          git clone https://github.com/ducks-github/Dux_OS.git
+          cd Dux_OS
+          chmod +x build_duxos.sh
+          sudo ./build_duxos.sh
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: duxos-iso
+          path: Dux_OS/Dux_OS.iso
