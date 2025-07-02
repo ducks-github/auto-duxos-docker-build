@@ -1,13 +1,12 @@
 #!/bin/bash
 set -e
 
-# Create working directory
-mkdir -p output
+# Clone the Dux_OS repo
+git clone https://github.com/ducks-github/Dux_OS.git
+cd Dux_OS
 
-# Run debootstrap to set up minimal system
-debootstrap --arch=amd64 stable ./duxos-chroot http://deb.debian.org/debian
+# Make sure the build script is executable
+chmod +x build_duxos.sh
 
-# Create ISO (example with xorriso)
-grub-mkrescue -o output/duxos.iso ./duxos-chroot
-
-echo "ISO build complete: output/duxos.iso"
+# Run the build script using default duxos.png (already inside repo)
+sudo ./build_duxos.sh
