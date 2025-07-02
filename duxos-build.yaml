@@ -1,0 +1,37 @@
+name: Build DuxOS ISO
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git \
+            build-essential \
+            live-build \
+            grub-pc-bin \
+            grub-efi-amd64-bin \
+            xorriso \
+            debootstrap
+
+      - name: Clone Dux_OS
+        run: |
+          git clone https://github.com/ducks-github/Dux_OS.git
+          cd Dux_OS
+
+      - name: Run build script
+        run: |
+          cd Dux_OS
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Save ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: duxos-iso
+          path: Dux_OS/output/*.iso
